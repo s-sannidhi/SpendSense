@@ -7,4 +7,13 @@ struct Goal: Identifiable, Codable {
     var currentAmount: Double
     var deadline: Date?
     var icon: String
+    var amazonProduct: AmazonProductInfo?
+    
+    struct AmazonProductInfo: Codable {
+        let title: String
+        let initialPrice: Double
+        let currentPrice: Double
+        let productUrl: String
+        let lastUpdated: Date
+    }
 } 

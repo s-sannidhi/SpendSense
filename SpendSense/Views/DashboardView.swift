@@ -3,6 +3,7 @@ import Charts
 
 struct DashboardView: View {
     @StateObject private var transactionStore = TransactionStore.shared
+    @StateObject private var userStore = UserStore.shared
     @Environment(\.colorScheme) var colorScheme
     
     // Define our duotone colors
@@ -14,11 +15,16 @@ struct DashboardView: View {
         colorScheme == .dark ? .mint.opacity(0.2) : .blue.opacity(0.1)
     }
     
+    private var headerTitle: String {
+        let name = userStore.firstName.isEmpty ? "Your" : "\(userStore.firstName)'s"
+        return "\(name) Finances"
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             // Sticky Header with improved spacing and contrast
             VStack(alignment: .leading, spacing: 12) {
-                Text("Your Finances")
+                Text(headerTitle)
                     .font(.system(size: 34, weight: .bold, design: .rounded))
                     .foregroundColor(primaryColor)
                 

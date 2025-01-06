@@ -22,6 +22,12 @@ struct SetupView: View {
                         }
                     }
                 case 1:
+                    NameSetupView {
+                        withAnimation {
+                            currentStep = 2
+                        }
+                    }
+                case 2:
                     BalanceStepView(balance: $initialBalance) {
                         withAnimation {
                             if !hasAddedInitialBalance,
@@ -41,18 +47,18 @@ struct SetupView: View {
                                 ))
                                 hasAddedInitialBalance = true
                             }
-                            currentStep = 2
+                            currentStep = 3
                         }
                     }
-                case 2:
+                case 3:
                     RecurringTransactionsStepView(transactions: $recurringTransactions) {
                         // Add all recurring transactions
                         for transaction in recurringTransactions {
                             transactionStore.addTransaction(transaction)
                         }
-                        currentStep = 3
+                        currentStep = 4
                     }
-                case 3:
+                case 4:
                     SetupGoalsView(goals: $setupGoals) {
                         // Add all goals
                         for goal in setupGoals {

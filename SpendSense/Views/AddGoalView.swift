@@ -7,6 +7,8 @@ struct AddGoalView: View {
     @State private var deadline: Date = Date().addingTimeInterval(86400 * 30) // 30 days from now
     @State private var hasDeadline = false
     @State private var selectedIcon = "target"
+    @State private var showingProductSearch = false
+    @State private var selectedProduct: AmazonProduct?
     var onAdd: ((Goal) -> Void)?
     
     private let icons = [
@@ -31,6 +33,17 @@ struct AddGoalView: View {
                         TextField("Amount", text: $targetAmount)
                             .multilineTextAlignment(.trailing)
                         #endif
+                    }
+                    
+                    Button(action: { showingProductSearch = true }) {
+                        HStack {
+                            Image(systemName: "cart.fill")
+                            Text("Search Amazon Products")
+                        }
+                    }
+                    
+                    if let product = selectedProduct {
+                        ProductSummaryView(product: product)
                     }
                 }
                 
@@ -66,6 +79,13 @@ struct AddGoalView: View {
                     Button("Save") { saveGoal() }
                 }
             }
+            .sheet(isPresented: $showingProductSearch) {
+                AmazonProductSearchView { product in
+                    selectedProduct = product
+                    name = product.title
+                    targetAmount = String(format: "%.2f", product.currentPrice)
+                }
+            }
         }
     }
     
@@ -73,12 +93,23 @@ struct AddGoalView: View {
         guard let amount = Double(targetAmount.replacingOccurrences(of: ",", with: ".")),
               !name.isEmpty else { return }
         
+        let amazonProductInfo = selectedProduct.map { product in
+            Goal.AmazonProductInfo(
+                title: product.title,
+                initialPrice: product.price,
+                currentPrice: product.currentPrice,
+                productUrl: product.productUrl,
+                lastUpdated: product.lastUpdated
+            )
+        }
+        
         let goal = Goal(
             name: name,
             targetAmount: amount,
             currentAmount: 0,
             deadline: hasDeadline ? deadline : nil,
-            icon: selectedIcon
+            icon: selectedIcon,
+            amazonProduct: amazonProductInfo
         )
         
         if let onAdd = onAdd {
@@ -88,5 +119,40 @@ struct AddGoalView: View {
         }
         
         dismiss()
+    }
+}
+
+struct ProductSummaryView: View {
+    let product: AmazonProduct
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("Product Details")
+                .font(.caption)
+                .foregroundColor(.secondary)
+            
+            HStack {
+                Image(systemName: "gift.fill")
+                    .frame(width: 40, height: 40)
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(6)
+                
+                VStack(alignment: .leading) {
+                    Text(product.title)
+                        .font(.footnote)
+                        .lineLimit(1)
+                    
+                    Text("Current Price: $\(product.currentPrice, specifier: "%.2f")")
+                        .font(.caption)
+                        .foregroundColor(.green)
+                }
+            }
+            
+            // Simple price history chart could be added here
+            
+            Link("View on Amazon", destination: URL(string: product.productUrl)!)
+                .font(.caption)
+        }
+        .padding(.vertical, 8)
     }
 } 
