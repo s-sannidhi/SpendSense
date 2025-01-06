@@ -21,35 +21,38 @@ struct ContentView: View {
                 SetupView()
             } else {
                 TabView(selection: $selectedTab) {
-                    DashboardView()
-                        .tabItem {
-                            Image(systemName: "chart.pie.fill")
-                            Text("Dashboard")
-                        }
-                        .tag(0)
+                    NavigationStack {
+                        DashboardView()
+                    }
+                    .tabItem {
+                        Label("Dashboard", systemImage: "chart.bar.fill")
+                    }
+                    .tag(0)
                     
-                    TransactionsView()
-                        .tabItem {
-                            Image(systemName: "list.bullet")
-                            Text("Transactions")
-                        }
-                        .tag(1)
+                    NavigationStack {
+                        TransactionsView()
+                    }
+                    .tabItem {
+                        Label("Transactions", systemImage: "list.bullet")
+                    }
+                    .tag(1)
                     
-                    GoalsView()
-                        .tabItem {
-                            Image(systemName: "target")
-                            Text("Goals")
-                        }
-                        .tag(2)
+                    NavigationStack {
+                        GoalsView()
+                    }
+                    .tabItem {
+                        Label("Goals", systemImage: "target")
+                    }
+                    .tag(2)
                     
-                    ProfileView()
-                        .tabItem {
-                            Image(systemName: "person.fill")
-                            Text("Profile")
-                        }
-                        .tag(3)
+                    NavigationStack {
+                        ProfileView()
+                    }
+                    .tabItem {
+                        Label("Profile", systemImage: "person.fill")
+                    }
+                    .tag(3)
                 }
-                .accentColor(colorScheme == .dark ? .mint : .blue)
             }
         }
         .onAppear {
