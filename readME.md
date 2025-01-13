@@ -14,9 +14,6 @@ SpendSense is a mobile app designed to help college students manage their budget
 - **Dark Mode**: Reduce eye strain with a sleek dark mode option.
 - **Offline Mode**: Log expenses and access data even without internet connectivity.
 
-## Screenshots
-*(Add screenshots or mockups here)*
-
 ## Installation
 1. Clone the repository:
    ```bash
